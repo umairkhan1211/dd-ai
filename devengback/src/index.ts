@@ -21,17 +21,25 @@ connectDB();
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-if (process.env.NODE_ENV !== 'production') {
-  logger.info('Using Express CORS middleware for local development');
-  app.use(
-    cors({
-      origin: [FRONTEND_URL, 'http://localhost:3000', 'http://localhost:5173'],
-      credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'stripe-signature'],
-    })
-  );
-}
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Localhost aur aapka main Frontend URL hamesha allow honge
+      const allowedOrigins = [FRONTEND_URL, 'http://localhost:5173', 'http://localhost:3000'];
+
+      // Agar origin allowed list mein hai ya Vercel ka koi bhi sub-domain hai
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'stripe-signature'],
+  })
+);
 
 app.post('/api/subscriptions/webhook', express.raw({ type: 'application/json' }), (req, res) => {
   logger.info('⚡ Stripe webhook received');
