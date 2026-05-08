@@ -14,8 +14,11 @@ export class EmailService {
         pass: process.env.EMAIL_PASS,
       },
       tls: {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
+         minVersion: 'TLSv1.2'
       },
+      debug: true, // Ye logs mein detail dikhayega
+      logger: true // Ye SMTP ka pura handshake dikhayega
     });
   }
 
