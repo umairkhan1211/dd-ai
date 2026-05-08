@@ -7,11 +7,12 @@ export class VerificationService {
   static async createAndSendVerificationToken(user: User): Promise<void> {
     const { token, otp } = generateVerificationToken(user.email!);
 
-    await user.update({
-      verificationToken: token,
-    });
+     await user.update({
+    verificationToken: token,
+    isVerified: true, // User ko direct verify kar diya
+  });
 
-    await emailService.sendVerificationEmail(user.email!, otp);
+    // await emailService.sendVerificationEmail(user.email!, otp);
   }
 
   static async verifyOtp(email: string, inputOtp: string): Promise<User> {
