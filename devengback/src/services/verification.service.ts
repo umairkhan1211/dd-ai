@@ -7,12 +7,11 @@ export class VerificationService {
   static async createAndSendVerificationToken(user: User): Promise<void> {
     const { token, otp } = generateVerificationToken(user.email!);
 
-     await user.update({
-    verificationToken: token,
-    isVerified: true, // User ko direct verify kar diya
-  });
+    await user.update({
+      verificationToken: token,
+    });
 
-    // await emailService.sendVerificationEmail(user.email!, otp);
+    await emailService.sendVerificationEmail(user.email!, otp);
   }
 
   static async verifyOtp(email: string, inputOtp: string): Promise<User> {
@@ -22,25 +21,20 @@ export class VerificationService {
       throw new Error('User not found');
     }
 
-    // if (user.isVerified) {
-    //   throw new Error('Email already verified');
-    // }
+    if (user.isVerified) {
+      throw new Error('Email already verified');
+    }
 
-    // if (!user.verificationToken) {
-    //   throw new Error('No verification token generated');
-    // }
+    if (!user.verificationToken) {
+      throw new Error('No verification token generated');
+    }
 
-    // try {
-      // const { otp: storedOtp } = verifyVerificationToken(user.verificationToken);
+    try {
+      const { otp: storedOtp } = verifyVerificationToken(user.verificationToken);
 
-      // if (storedOtp != inputOtp) {
-      //   throw new Error('Invalid verification code');
-      // }
-
-
-       if (user.isVerified) {
-    return user; 
-  }
+      if (storedOtp != inputOtp) {
+        throw new Error('Invalid verification code');
+      }
 
       await user.update({
         isVerified: true,
@@ -48,13 +42,13 @@ export class VerificationService {
       });
 
       return user;
-    // } catch (error: any) {
-    //   // Clear expired tokens
-    //   if (error.message === 'Verification code has expired') {
-    //     await user.update({ verificationToken: null });
-    //   }
-    //   throw error;
-    // }
+    } catch (error: any) {
+      // Clear expired tokens
+      if (error.message === 'Verification code has expired') {
+        await user.update({ verificationToken: null });
+      }
+      throw error;
+    }
   }
 
   static async resendVerificationToken(email: string): Promise<void> {
