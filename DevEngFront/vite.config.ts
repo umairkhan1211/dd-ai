@@ -8,6 +8,19 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // YEH PROXY BLOCK ADD KIYA HAI
+    proxy: {
+      "/api": {
+        // Agar aap local backend chalate hain (localhost:3000) toh yeh use karein:
+        // target: "http://localhost:3000", 
+
+        // Agar aap local frontend par live Railway backend use karna chahte hain toh line 15 ko comment karein aur line 18 ko uncomment karein:
+        target: "https://dvengbackend-production.up.railway.app",
+
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""), // Yeh '/api' ko hata kar backend par forward karega
+      },
+    },
   },
   plugins: [
     react(),
