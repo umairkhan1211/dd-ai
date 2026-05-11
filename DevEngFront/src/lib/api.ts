@@ -2,7 +2,8 @@ import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api",
+  // baseURL: import.meta.env.VITE_API_URL || "/api",
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -111,8 +112,8 @@ apiClient.interceptors.response.use(
         case 503:
         case 504: {
           if (backendErrorMessage != "User record not found") {
-          const errorMessage =
-            backendErrorMessage || "Something went wrong. Please try again.";
+            const errorMessage =
+              backendErrorMessage || "Something went wrong. Please try again.";
             toast({
               title: "Server Error",
               description: errorMessage,
