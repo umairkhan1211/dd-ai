@@ -33,6 +33,7 @@ const sessionMiddleware = session({
   secret: process.env.SESSION_SECRET || 'a_default_secret_for_development',
   resave: false,
   saveUninitialized: false,
+  proxy: true,
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
