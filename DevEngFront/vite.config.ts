@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
         target: "https://dvengbackend-production.up.railway.app",
 
         changeOrigin: true,
-        rewrite: (path) => path 
+        rewrite: (path) => path.replace(/^\/api/, "")
       },
     },
   },
