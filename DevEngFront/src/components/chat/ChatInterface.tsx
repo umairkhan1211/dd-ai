@@ -605,8 +605,10 @@ export const ChatInterface = forwardRef<
           streamingIds: [],
         });
 
-        const streamUrl = `${import.meta.env.VITE_API_URL
-          }/sessions/${projectId}/messages`;
+        // const streamUrl = `${import.meta.env.VITE_API_URL
+        //   }/sessions/${projectId}/messages`;
+
+        const streamUrl = `/api/sessions/${projectId}/messages`;
 
         const controller = streamChat(
           streamUrl,
