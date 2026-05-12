@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://dvengbackend-production.up.railway.app/$1"
+      "destination": "https://dvengbackend-production.up.railway.app/api/$1"
     }
   ]
 }
